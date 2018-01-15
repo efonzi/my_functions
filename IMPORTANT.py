@@ -40,6 +40,8 @@ print(IPython.sys_info())
 sp.Popen("pip3 freeze", shell=True, stdout=sp.PIPE).stdout.read().decode().splitlines()
 # OR in jupyter
 get_ipython().system('pip3 freeze')
+# OR in jupyter
+!pip3 freeze
 
 
 ####### FOUR EXAMPLES OF COLOR PALETTES IN SEABORN
