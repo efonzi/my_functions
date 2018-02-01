@@ -171,12 +171,14 @@ def offTargets(bamlist, bedtoolspath, bedfile, plots=False):
             _ = plt.ylabel('Reads proportion')
             plt.legend()
             plt.savefig(sample + '_mapq_rel.png')
-    
-    
+
+            # remove intermediate files
+            sp.run('rm *.count', shell=True)
+
+
         # remove intermediate files
         sp.run('rm %s*bed' %sample, shell=True)
-        sp.run('rm *.count', shell=True)
-        
+
         
         
 
