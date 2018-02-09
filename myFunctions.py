@@ -1,6 +1,150 @@
 
 # coding: utf-8
 
+def getFastqFromNAS_01(name, dataset, outpath=None):
+
+    import pandas as pd
+    import os
+    import re
+    import subprocess as sp
+    
+    # set some paths
+    homepath = os.path.expanduser('~') + '/'
+    
+    # get current path
+    currentpath = os.getcwd() + '/'
+
+    # in case a relative path was given as input
+    if not os.path.commonprefix([homepath, outpath]):
+        # append to current path
+        outpath = currentpath + outpath
+    
+        
+    # load dataset and set sample ids to indeces
+    dataset = pd.read_table(homepath + dataset, sep='\t', header=0, dtype='str')
+    dataset = dataset.set_index("sample_id")
+    
+    # get fastq path for sample
+    fastq_path = homepath + dataset.loc[name, 'fastq_path_wes']
+    
+    # get common substring of fastq names of samples
+    fastq_cs = dataset.loc[name, 'fastq_common_substring_wes']
+    
+    # create output fastq names
+    fastq1 = name + '_R1.fastq'
+    fastq2 = name + '_R2.fastq'
+    
+    
+    # list all fastq.gz files that match fastq_cs
+    gz_list = [gz for gz in os.listdir(fastq_path) if re.search(fastq_cs, gz)]
+    
+    
+    # loop over them
+    for gz in gz_list:
+    
+        # decompress it while downloading to inoutpath
+        sp.run('gzip -dc %s > %s' %(fastq_path + gz, outpath + gz[:-3]), shell=True)
+        
+        
+        
+        
+def groupAndOrderFastq(name, dataset, inpath):
+
+    import pandas as pd
+    import os
+    import re
+    
+    # set some paths
+    homepath = os.path.expanduser('~') + '/'
+    
+    # get current path
+    currentpath = os.getcwd() + '/'
+
+    # set all possible denominations of the paired read
+    denominations = ['_R', '_sequence_', '_read']
+
+    
+    # load dataset and set sample ids to indeces
+    dataset = pd.read_table(homepath + dataset, sep='\t', header=0, dtype='str')
+    dataset = dataset.set_index("sample_id")
+        
+    # get common substring of fastq names of samples
+    fastq_cs = dataset.loc[name, 'fastq_common_substring_wes']
+
+    # in case a relative path was given as input
+    if not os.path.commonprefix([homepath, inpath]):
+        # append to current path
+        inpath = currentpath + inpath
+
+
+    # list all fastq for current sample
+    current_sample_fastq = [f for f in os.listdir(inpath) if re.search(fastq_cs, f)]
+    
+    
+    # loop over
+    for d in denominations:
+    
+        # for current sample, list all fastq that contain current denomination
+        l = [f for f in current_sample_fastq if re.search(d, f)]
+    
+        
+        # if any exist
+        if l:
+    
+            # list common substrings of each pair of fastq
+            common_between_read_pairs = [d.join(re.split(d + '[12]', f)) for f in current_sample_fastq]
+    
+            
+            # uniq list
+            cbrp = sorted(list(set(common_between_read_pairs)))
+            
+            break
+
+    # list all R1 fastq (unordered), concatenating their relative path
+    R1 = [inpath + f for f in current_sample_fastq if re.search(d + '1', f)]
+    
+    # list all R2 fastq (unordered), concatenating their relative path
+    R2 = [inpath + f for f in current_sample_fastq if re.search(d + '2', f)]
+
+
+    # create new lists
+    R1b = []
+    R2b = []
+    
+    # loop over common substrings (pairs of fastqs)
+    for c in cbrp:
+    
+        # re-create original string
+        c = (d + '[12]').join(c.split(d))
+    
+        # loop over R1 fastq
+        for r1 in R1:
+    
+            # if common substring matches R1 fastq
+            if re.search(c, r1):
+    
+                # append it to new list
+                R1b.append(r1)
+    
+        # loop over R1 fastq
+        for r2 in R2:
+    
+            # if common substring matches R1 fastq
+            if re.search(c, r2):
+    
+                # append it to new list
+                R2b.append(r2)
+    
+    
+    # join elements in new lists
+    R1b = ' '.join(R1b)
+    R2b = ' '.join(R2b)
+
+    return(R1b, R2b)
+
+
+
+
 
 def session_info():
 

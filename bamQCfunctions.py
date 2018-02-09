@@ -130,29 +130,29 @@ def offTargets(bamlist, bedtoolspath, bedfile, plots=False):
         with open('read_alignment.log', 'a') as outfile:
             outfile.write('\t'.join([sample, str(all_reads), str(off_reads/all_reads*100)]) + '\n')
         
-        
-        ### COUNT READ ALIGNMENT BY THEIR MAPPING QUALITY FOR ALL READS AND OFF TARGET
-        
-        cmd = 'cut -f5 %s.bed | sort | uniq -c > %s.count' % (sample, sample)
-        sp.run(cmd, shell=True)
-        
-        cmd = 'cut -f5 %s_off.bed | sort | uniq -c > %s_off.count' % (sample, sample)
-        sp.run(cmd, shell=True)
-    
-    
-        ### IMPORT COUNT TABLES AND NORMALIZE VALUES FOR ALL READS AND OFF TARGET
-        
-        count = pd.read_table(sample + '.count', sep='\s', header=None, engine='python')
-        count = count.sort_values(1)
-        count[2] = [e/sum(count[0]) for e in count[0]]
-        
-        count_off = pd.read_table(sample + '_off.count', sep='\s', header=None, engine='python')
-        count_off = count_off.sort_values(1)
-        count_off[2] = [e/sum(count_off[0]) for e in count_off[0]]
-    
+
         
         if plots == True:
             
+            ### COUNT READ ALIGNMENT BY THEIR MAPPING QUALITY FOR ALL READS AND OFF TARGET
+
+            cmd = 'cut -f5 %s.bed | sort | uniq -c > %s.count' % (sample, sample)
+            sp.run(cmd, shell=True)
+        
+            cmd = 'cut -f5 %s_off.bed | sort | uniq -c > %s_off.count' % (sample, sample)
+            sp.run(cmd, shell=True)
+            
+            
+            ### IMPORT COUNT TABLES AND NORMALIZE VALUES FOR ALL READS AND OFF TARGET
+            
+            count = pd.read_table(sample + '.count', sep='\s', header=None, engine='python')
+            count = count.sort_values(1)
+            count[2] = [e/sum(count[0]) for e in count[0]]
+            
+            count_off = pd.read_table(sample + '_off.count', sep='\s', header=None, engine='python')
+            count_off = count_off.sort_values(1)
+            count_off[2] = [e/sum(count_off[0]) for e in count_off[0]]
+
             ### SAVE PLOTS DISTRIBUTION OF READS MAPPING QUALITIES
             
             _ = plt.plot(count[1], count[0], '-', linewidth=0.7, label='all reads')
@@ -171,12 +171,14 @@ def offTargets(bamlist, bedtoolspath, bedfile, plots=False):
             _ = plt.ylabel('Reads proportion')
             plt.legend()
             plt.savefig(sample + '_mapq_rel.png')
-    
-    
+
+            # remove intermediate files
+            sp.run('rm *.count', shell=True)
+
+
         # remove intermediate files
-        sp.run('rm *.bed', shell=True)
-        sp.run('rm *.count', shell=True)
-        
+        sp.run('rm %s*bed' %sample, shell=True)
+
         
         
 
