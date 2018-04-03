@@ -100,8 +100,6 @@ def overRepresentationFromGeneSets_03(genes, geneSets, remove_no_hits=True):
     
     CREATED
     171025
-    
-    COPIED AND PASTED FROM FILE 'myFunctions.py'
     '''
 
     import numpy as np
