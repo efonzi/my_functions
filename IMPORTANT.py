@@ -1,4 +1,33 @@
 
+##### CONDA ######
+# https://conda.io/docs/user-guide/tasks/manage-environments.html#
+conda create -n my_env
+conda install -n my_env package_name # ex 'conda install -n my_env r=3.4.3'
+
+# list available version of a package
+conda search package_name
+
+# list environments (1)
+conda info --envs
+# list environments (2)
+conda env list
+
+# list packages in an environment
+conda list -n myenv
+
+
+source activate my_env
+# is equal to
+conda activate my_env
+
+
+###### CREATE CONDA ENVIRONMENT TO RUN ~/WESPipeline/scriptsrsIDquery.01.R  ######
+conda create -n rsID
+conda install -n rsID r-plyr
+conda install -n rsID r-stringr
+conda install -n rsID r-httr
+conda install -n rsID r-xml
+
 
 ####### detailed description of PIP, CONDA, JUPYTER
 # http://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/
