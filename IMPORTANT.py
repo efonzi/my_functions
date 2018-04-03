@@ -16,10 +16,6 @@ conda env list
 conda list -n myenv
 
 
-source activate my_env
-# is equal to
-conda activate my_env
-
 
 ###### CREATE CONDA ENVIRONMENT TO RUN ~/WESPipeline/scriptsrsIDquery.01.R  ######
 conda create -n rsID
