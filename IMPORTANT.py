@@ -1,5 +1,12 @@
+###############################################################
+####################### CONDA/JUPYTER #########################
+###############################################################
 
-##### CONDA ######
+####### detailed description of PIP, CONDA, JUPYTER
+# http://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/
+
+
+#################  USEFUL COMMANDS ############
 # https://conda.io/docs/user-guide/tasks/manage-environments.html#
 conda create -n my_env
 conda install -n my_env package_name # ex 'conda install -n my_env r=3.4.3'
@@ -15,18 +22,43 @@ conda env list
 # list packages in an environment
 conda list -n myenv
 
+###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --add channels statsmodels
+conda create -y -n py365_euge python=3.6.5 ipykernel
+conda install -y -n py365_euge pandas numpy matplotlib seaborn statsmodels matplotlib-venn
+source activate py365_euge
+python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
 
 
-###### CREATE CONDA ENVIRONMENT TO RUN ~/WESPipeline/scriptsrsIDquery.01.R  ######
-conda create -n rsID
-conda install -n rsID r-plyr
-conda install -n rsID r-stringr
-conda install -n rsID r-httr
-conda install -n rsID r-xml
+###### TO CREATE CONDA ENVIRONMENT 'py365_rsID' ######
+# to also run ~/WESPipeline/scriptsrsIDquery.01.R
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --add channels statsmodels
+conda config --add channels efonzi
+conda create -y -n py365_rsID python=3.6.5 ipykernel
+conda install -y -n py365_rsID pandas numpy matplotlib seaborn statsmodels matplotlib-venn
+conda install -y -n py365_rsID r-rsnps
+source activate py365_rsID
+python -m ipykernel install --user --name py365_rsID --display-name 'py365_rsID'
+
+## alternatively, but creates an awful output everytime the env is de/activated
+# conda install -n rsID r-plyr
+# conda install -n rsID r-stringr
+# conda install -n rsID r-httr
+# conda install -n rsID r-xml
 
 
-####### detailed description of PIP, CONDA, JUPYTER
-# http://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/
+
+# to check the directories of the kernels currently installed
+jupyter kernelspec list
+
+jupyter notebook --no-browser --port=8231
+
+
+
 
 
 ####### CADAVER SCRIPT!!!
