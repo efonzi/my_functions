@@ -38,11 +38,26 @@ conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --add channels statsmodels
 conda config --add channels efonzi
+
+conda create -y -n py365_rsID r-rsnps
+conda list -n py365_rsID > to_pin
+python3 transform_pin_file.py
+mv pinned ~/miniconda3/envs/py365_rsID/conda-meta/
+conda remove -y -n py365_rsID --all
+
 conda create -y -n py365_rsID python=3.6.5 ipykernel
-conda install -y -n py365_rsID pandas numpy matplotlib seaborn statsmodels matplotlib-venn
 conda install -y -n py365_rsID r-rsnps
+conda install -y -n py365_rsID pandas numpy matplotlib seaborn statsmodels matplotlib-venn
 source activate py365_rsID
 python -m ipykernel install --user --name py365_rsID --display-name 'py365_rsID'
+
+# code inside 'transform_pin_file.py'
+import re
+with open('to_pin') as infile:
+    pins = infile.read().splitlines()[2:]
+pins = '\n'.join([' =='.join(re.split('\s+', p)[:2]) for p in pins])
+with open('pinned', 'w') as outfile:
+    outfile.write(pins)
 
 ## alternatively, but creates an awful output everytime the env is de/activated
 # conda install -n rsID r-plyr
