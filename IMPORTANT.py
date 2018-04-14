@@ -22,6 +22,10 @@ conda env list
 # list packages in an environment
 conda list -n myenv
 
+# remove an environment
+conda remove --name myenv --all
+
+
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
 conda config --add channels bioconda
 conda config --add channels conda-forge
