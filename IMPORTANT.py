@@ -37,32 +37,45 @@ source activate py365_euge
 python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
 
 
+
+###### TO BUILD 'r-rawcopy' PACKAGE FROM SCRATCH #######
+conda install anaconda-client
+anaconda login # then type username and password of your ANACONDA account
+conda install conda-build
+##
+mkdir r-rawcopy
+> r-rawcopy/meta.yaml
+> r-rawcopy/build.sh
+> r-rawcopy/bld.bat # fill these 3 files as in the ones saved in '~/my_functions/r-rawcopy/'
+##
+conda-build r-rawcopy
+anaconda upload /home/PERSONALE/eugenio.fonzi2/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2
+
+
+
+###### TO CREATE CONDA ENVIRONMENT 'r332_rawcopy' ######
+conda create -y -n r332_rawcopy
+conda install -y -n r332_rawcopy -c efonzi r-rawcopy
+##
+python3 ~/my_functions/conda_edit_pin_file.py -n r332_rawcopy
+
+
+
 ###### TO CREATE CONDA ENVIRONMENT 'py365_rsID' ######
 # to also run ~/WESPipeline/scriptsrsIDquery.01.R
 conda config --add channels bioconda
 conda config --add channels conda-forge
 conda config --add channels statsmodels
 conda config --add channels efonzi
-
+##
 conda create -y -n py365_rsID python=3.6.5 ipykernel
 conda install -y -n py365_rsID r-rsnps
 conda install -y -n py365_rsID pandas numpy matplotlib seaborn statsmodels matplotlib-venn
 source activate py365_rsID
 python -m ipykernel install --user --name py365_rsID --display-name 'py365_rsID'
-
-conda list -n py365_rsID > to_pin
-python3 transform_pin_file.py
-mv pinned ~/miniconda3/envs/py365_rsID/conda-meta/
-
-
-# code inside 'transform_pin_file.py'
-import re
-with open('to_pin') as infile:
-    pins = infile.read().splitlines()[2:]
-pins = '\n'.join([' =='.join(re.split('\s+', p)[:2]) for p in pins])
-with open('pinned', 'w') as outfile:
-    outfile.write(pins)
-
+##
+python3 ~/my_functions/conda_edit_pin_file.py -n py365_rsID
+##
 ## alternatively, but creates an awful output everytime the env is de/activated
 # conda install -n rsID r-plyr
 # conda install -n rsID r-stringr
