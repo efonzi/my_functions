@@ -43,13 +43,23 @@ conda install anaconda-client
 anaconda login # then type username and password of your ANACONDA account
 conda install conda-build
 ##
-mkdir r-rawcopy
-> r-rawcopy/meta.yaml
-> r-rawcopy/build.sh
-> r-rawcopy/bld.bat # fill these 3 files as in the ones saved in '~/my_functions/r-rawcopy/'
+mkdir ~/my_functions/r-rawcopy
+> ~/my_functions/r-rawcopy/meta.yaml
+> ~/my_functions/r-rawcopy/build.sh
+> ~/my_functions/r-rawcopy/bld.bat 
+# fill these 3 files as in the ones saved in '~/my_functions/r-rawcopy/'
 ##
-conda-build r-rawcopy
-anaconda upload /home/PERSONALE/eugenio.fonzi2/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2
+conda-build ~/my_functions/r-rawcopy
+conda convert --platform all ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2 -o ~/miniconda3/conda-bld/
+anaconda upload ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-32/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/osx-64/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/win-32/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/win-64/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-aarch64/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-armv6l/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-armv7l/r-rawcopy-1.1-0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-ppc64le/r-rawcopy-1.1-0.tar.bz2
 
 
 
