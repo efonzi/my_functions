@@ -1,4 +1,30 @@
 
+def parseFastqcZip(ziplist):
+    
+    '''
+    Take a list of ZIP files that are FASTQC output (as absolute paths) and return....
+    '''
+    
+    import pandas as pd
+    import re
+    from zipfile import ZipFile
+    
+    # loop over zipfiles
+    for z in ziplist:
+
+        # extract fastq name
+        name = z.split('/')[-1].replace('_fastqc.zip', '')
+        
+        # open ZIP archive and open file with FASTQC result data
+        # split data between all the different analyses of FASTQC
+        # (each part ends with the string '>>END_MODULE')
+        with ZipFile(z) as myzip:
+            with myzip.open(name + '_fastqc/fastqc_data.txt') as myfile:
+                fastqc = myfile.read().decode().split('>>END_MODULE')
+
+
+
+
 
 def runFastqc(fastqlist, fastqcpath):
     

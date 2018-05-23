@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-def collectWESresults(path, suffix, dataset_file, header=0):
+def collectWESresults(path, run, suffix, dataset_file, header=0, colname_dict=False):
 
     '''
     Load and merge every table of a given type in a given subfolder of WES
@@ -10,9 +10,11 @@ def collectWESresults(path, suffix, dataset_file, header=0):
 
     INPUT
     path = absolute directory to desired WES results subfolder
+    run = run name
     suffix = desired table names common suffix
     dataset_file = absolute path to DATASET file (including file name)
     header = number of line to be used to derive column names (INT)
+    colname_dict = a dictionary with the info to rename specific columns
 
     CAVEAT
     This function is designed to load only tables produced downstream of the
@@ -28,7 +30,7 @@ def collectWESresults(path, suffix, dataset_file, header=0):
     # load dataset table
     dataset = pd.read_table(dataset_file, sep='\t', header=0)
 
-    # get name of every file of FILTERED variants in path
+    # get name of every file in path that ends by SUFFIX
     table_names = [t for t in os.listdir(path) if t[-len(suffix):] == suffix]
 
     # loop over filenames
@@ -36,6 +38,10 @@ def collectWESresults(path, suffix, dataset_file, header=0):
 
         # load table
         df = pd.read_table(path + t, sep='\t', header=header)
+        
+        # rename specific columns, if necessary
+        if colname_dict:
+            df = df.rename(colname_dict, axis=1)
 
         # get pair name ('tumor_normal')
         pair = '_'.join(t.split('_')[0:2])
@@ -52,10 +58,13 @@ def collectWESresults(path, suffix, dataset_file, header=0):
         # add column with disease name
         df['disease'] = len(df) * [disease]
 
+        # add column with run name
+        df['run'] = len(df) * [run]
+
         # concatenate to growing DF
         every_table = pd.concat([every_table, df])
 
-    return (every_table)
+    return(every_table)
 
 
 
