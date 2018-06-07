@@ -33,6 +33,7 @@ conda config --add channels statsmodels
 conda create -y -n py365_euge python=3.6.5 ipykernel
 conda install -y -n py365_euge pandas numpy matplotlib seaborn statsmodels matplotlib-venn
 conda install -y -n py365_euge pyyaml
+conda install -y -n py365_euge biopython
 source activate py365_euge
 python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
 
