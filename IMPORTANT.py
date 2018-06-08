@@ -1,3 +1,24 @@
+###################################################################
+######################## PEDAGOGIA - ped432 #######################
+###################################################################
+## username: martinelli
+## password: antonella
+## ip: 172.20.45.196
+
+# access from local
+lftp martinelli@ped432
+lftp martinelli@172.20.45.196
+
+# download files to local
+lftp ftp://martinelli@172.20.45.196 -u martinelli,antonella -e "mirror --verbose SOURCE DEST; bye"
+# SOURCE must be a folder, doesn't work with a single file --> ex. '20180521_Martinelli/MartinelliMetaboloma/'
+# DEST --> ex. '/media/DATA1/ped/'
+## DOESN'T WORK FROM NAS!!!!!!
+
+
+
+
+
 ###############################################################
 ####################### CONDA/JUPYTER #########################
 ###############################################################
@@ -47,7 +68,7 @@ conda install conda-build
 mkdir ~/my_functions/r-rawcopy
 > ~/my_functions/r-rawcopy/meta.yaml
 > ~/my_functions/r-rawcopy/build.sh
-> ~/my_functions/r-rawcopy/bld.bat 
+> ~/my_functions/r-rawcopy/bld.bat
 # fill these 3 files as in the ones saved in '~/my_functions/r-rawcopy/'
 ##
 conda-build ~/my_functions/r-rawcopy
@@ -210,7 +231,7 @@ handle = Entrez.esearch(db="gene" ,term=query, tettype="gene", retmode="xml")
 record = Entrez.read(handle)
 # close handle
 handle.close
-# extract entrez ID of gene
+# extract entrez ID of gene (ONLY THE FIRST IN THE LIST!!!!!!)
 ID = record["IdList"][0]
 # send request to Entrez
 handle = Entrez.efetch(db="gene" ,id=ID, tettype="gene", retmode="xml")
@@ -282,8 +303,7 @@ print(help_string)
 
 
 ####### start jupyter notebook
-jupyter notebook --no-browser --port=8761/2/3/4
-
+jupyter notebook --no-browser --port=8231
 
 ####### to install package as user (from shell)
 $ python3.4 -m pip install --user packageName

@@ -1,6 +1,52 @@
 
 # coding: utf-8
 
+def squeezeColumn(df, to_squeeze, ref_col, sep):
+    
+    '''
+    'df' has one column with duplicate entries ('ref_col') and another column 'to_squeeze'.
+    We want to merge in the same string every entry in 'to_squeeze' that correspond to the same entry in 'ref_col'.
+    With 'sep' we decide what will be the separator.
+    EX. 
+    mydf
+    A    B
+    1    x
+    2    x
+    3    x
+    4    y
+    5    y
+    
+    squeezeColumn(mydf, 'A', 'B', '_')
+    A      B
+    1_2_3  x
+    4_5    y
+    '''
+    
+    import pandas as pd
+    
+    # drop column 'to_squeeze' and then drop duplicates
+    df1 = df.drop(to_squeeze, axis=1).drop_duplicates()
+    
+    # get unique list of entries in column 'ref_col'
+    refs = df[ref_col].unique()
+    
+    # loop over entries in 'ref_col' and get every entry in 'to_squeeze' that correspond to each of them
+    # join the list of such entries by 'sep' and make it the index of a SERIES, with 'ref_col' entry as data
+    # concatenate every SERIES and reset indeces
+    df2 = pd.concat([pd.Series(r, [sep.join(df.loc[df[ref_col] == r, to_squeeze])]) for r in refs]).reset_index()
+    
+    # rename columns with original names
+    df2.columns = [to_squeeze, ref_col]
+    
+    # merge to dropped DF by 'ref_col'
+    df = df2.merge(df1, on=ref_col)
+    
+    return(df)
+
+
+
+
+
 def collectWESresults(path, run, suffix, dataset_file, header=0, colname_dict=False):
 
     '''
