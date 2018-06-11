@@ -8,6 +8,7 @@
 # access from local
 lftp martinelli@ped432
 lftp martinelli@172.20.45.196
+ftp 172.20.45.196 # then type username and password
 
 # download files to local
 lftp ftp://martinelli@172.20.45.196 -u martinelli,antonella -e "mirror --verbose SOURCE DEST; bye"
@@ -22,7 +23,8 @@ lftp ftp://martinelli@172.20.45.196 -u martinelli,antonella -e "mirror --verbose
 ###############################################################
 ####################### CONDA/JUPYTER #########################
 ###############################################################
-
+# username: efonzi
+# password: Anaconda1a.
 ####### detailed description of PIP, CONDA, JUPYTER
 # http://jakevdp.github.io/blog/2017/12/05/installing-python-packages-from-jupyter/
 
@@ -61,9 +63,9 @@ python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
 
 
 ###### TO BUILD 'r-rawcopy' PACKAGE FROM SCRATCH #######
-conda install anaconda-client
-anaconda login # then type username and password of your ANACONDA account
-conda install conda-build
+conda install anaconda-client -y
+anaconda login # then type username and password of ANACONDA account
+conda install conda-build -y
 ##
 mkdir ~/my_functions/r-rawcopy
 > ~/my_functions/r-rawcopy/meta.yaml
@@ -72,17 +74,17 @@ mkdir ~/my_functions/r-rawcopy
 # fill these 3 files as in the ones saved in '~/my_functions/r-rawcopy/'
 ##
 conda-build ~/my_functions/r-rawcopy
-conda convert --platform all ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2 -o ~/miniconda3/conda-bld/
-anaconda upload ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/linux-32/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/osx-64/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/win-32/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/win-64/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/linux-aarch64/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/linux-armv6l/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/linux-armv7l/r-rawcopy-1.1-0.tar.bz2
-anaconda upload ~/miniconda3/conda-bld/linux-ppc64le/r-rawcopy-1.1-0.tar.bz2
-
+conda convert --platform all ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-r3.3.2_0.tar.bz2 -o ~/miniconda3/conda-bld/
+anaconda upload ~/miniconda3/conda-bld/linux-64/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-32/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/osx-64/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-aarch64/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-armv6l/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-armv7l/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+anaconda upload ~/miniconda3/conda-bld/linux-ppc64le/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+#anaconda upload ~/miniconda3/conda-bld/win-32/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+#anaconda upload ~/miniconda3/conda-bld/win-64/r-rawcopy-1.1-r3.3.2_0.tar.bz2
+# windows conversion didn't work
 
 
 ###### TO CREATE CONDA ENVIRONMENT 'r332_rawcopy' ######

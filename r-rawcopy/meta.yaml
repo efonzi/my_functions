@@ -1,27 +1,44 @@
 package:
-  name: r-rawcopy
-  version: "1.1"
+    name: r-rawcopy
+    version: 1.1
 
 source:
   url: http://array.medsci.uu.se/R/src/contrib/rawcopy_1.1.tar.gz
 
+build:
+    rpaths:
+        - lib/R/lib/
+        - lib/
+    script: R CMD INSTALL --build .
+    string: r3.3.2_0
+
 requirements:
-  run:
-    - r-base =3.3.2
-    - bioconductor-affxparser =1.48.0
-    - bioconductor-dnacopy =1.48.0
-    - r-foreach =1.4.4
-    - r-pscbs =0.63.0
-    - r-squash =1.0.8
-    - r-ape =5.1
-    - r-sdmtools =1.1_221
-    - r-digest =0.6.15
+    build:
+        - r-base =3.3.2
+        - bioconductor-affxparser =1.48.0
+        - bioconductor-dnacopy =1.48.0
+        - r-foreach =1.4.4
+        - r-pscbs =0.63.0
+        - r-squash =1.0.8
+        - r-ape =5.1
+        - r-sdmtools =1.1_221
+        - r-digest =0.6.15
+
+    run:
+        - r-base =3.3.2
+        - bioconductor-affxparser =1.48.0
+        - bioconductor-dnacopy =1.48.0
+        - r-foreach =1.4.4
+        - r-pscbs =0.63.0
+        - r-squash =1.0.8
+        - r-ape =5.1
+        - r-sdmtools =1.1_221
+        - r-digest =0.6.15
 
 test:
-  commands:
-    - $R -e "library(rawcopy)"           # [not win]
-    - "\"%R%\" -e \"library(rawcopy)\""  # [win]
+    commands:
+        - R -e "library(rawcopy)"           # [not win]
 
 about:
-  home: http://rawcopy.org/
-  summary: 'Rawcopy is an R package for processing of Affymetrix CytoScan HD, CytoScan 750k and SNP 6.0 microarrays for copy number analysis. It takes CEL files (raw microarray intensity values) as input. Output consists of (1) Log ratio, normalized intensity per probe relative to sample median and a reference data set (2) B-allele frequency or BAF, estimated abundance of the B allele relative to total abundance, SNP probes only (3) Segments, genomic segments of unchanging copy number, estimated using the PSCBS package (4) Figures, several figures per sample and sample set are plotted for the user’s convenience'
+    home: http://rawcopy.org/
+    summary: 'Rawcopy is an R package for processing of Affymetrix CytoScan HD, CytoScan 750k and SNP 6.0 microarrays for copy number analysis. It takes CEL files (raw microarray intensity values) as input. Output consists of (1) Log ratio, normalized intensity per probe relative to sample median and a reference data set (2) B-allele frequency or BAF, estimated abundance of the B allele relative to total abundance, SNP probes only (3) Segments, genomic segments of unchanging copy number, estimated using the PSCBS package (4) Figures, several figures per sample and sample set are plotted for the user’s convenience'
