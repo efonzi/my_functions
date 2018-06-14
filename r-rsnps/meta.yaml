@@ -1,0 +1,102 @@
+{% set version = '0.2.0' %}
+
+{% set posix = 'm2-' if win else '' %}
+{% set native = 'm2w64-' if win else '' %}
+
+package:
+  name: r-rsnps
+  version: {{ version|replace("-", "_") }}
+
+source:
+  fn: rsnps_{{ version }}.tar.gz
+  url:
+    - https://cran.r-project.org/src/contrib/rsnps_{{ version }}.tar.gz
+    - https://cran.r-project.org/src/contrib/Archive/rsnps/rsnps_{{ version }}.tar.gz
+  sha256: eb26c76b5b958ba7088c86c1295d1fe77329be1ec8c788ce250bdc2aa258e181
+
+
+  # patches:
+   # List any patch files here
+   # - fix.patch
+
+build:
+  merge_build_host: True  # [win]
+  # If this is a new build for the same version, increment the build number.
+  number: 0
+  noarch: generic
+
+  # This is required to make R link correctly on Linux.
+  rpaths:
+    - lib/R/lib/
+    - lib/
+
+# Suggests: roxygen2 (>= 5.0.1), testthat, knitr, covr
+requirements:
+  build:
+
+  host:
+    - r-base
+    - r-xml
+    - r-httr >=1.2.0
+    - r-jsonlite
+    - r-plyr
+    - r-stringr
+
+  run:
+    - r-base
+    - r-xml
+    - r-httr >=1.2.0
+    - r-jsonlite
+    - r-plyr
+    - r-stringr
+
+test:
+  commands:
+    # You can put additional test commands to be run here.
+    - $R -e "library('rsnps')"           # [not win]
+    - "\"%R%\" -e \"library('rsnps')\""  # [win]
+
+  # You can also put a file called run_test.py, run_test.sh, or run_test.bat
+  # in the recipe that will be run at test time.
+
+  # requires:
+    # Put any additional test requirements here.
+
+about:
+  home: https://github.com/ropensci/rsnps
+  license: MIT + file LICENSE
+  summary: 'A programmatic interface to various ''SNP'' ''datasets'' on the web: ''OpenSNP''
+    (<https://opensnp.org>), ''NBCIs'' ''dbSNP'' database  (<https://www.ncbi.nlm.nih.gov/projects/SNP>),
+    and Broad Institute ''SNP'' Annotation and Proxy Search  (<http://archive.broadinstitute.org/mpg/snap/ldsearch.php>).
+    Functions  are included for searching for ''SNPs'' for the Broad Institute and ''NCBI''.  For
+    ''OpenSNP'', functions are included for getting ''SNPs'', and data for  ''genotypes'',
+    ''phenotypes'', annotations, and bulk downloads of data by user.'
+
+  license_family: MIT
+
+
+
+# The original CRAN metadata for this package was:
+
+# Package: rsnps
+# Title: Get 'SNP' ('Single-Nucleotide' 'Polymorphism') Data on the Web
+# Description: A programmatic interface to various 'SNP' 'datasets' on the web: 'OpenSNP' (<https://opensnp.org>), 'NBCIs' 'dbSNP' database  (<https://www.ncbi.nlm.nih.gov/projects/SNP>), and Broad Institute 'SNP' Annotation and Proxy Search  (<http://archive.broadinstitute.org/mpg/snap/ldsearch.php>). Functions  are included for searching for 'SNPs' for the Broad Institute and 'NCBI'.  For 'OpenSNP', functions are included for getting 'SNPs', and data for  'genotypes', 'phenotypes', annotations, and bulk downloads of data by user.
+# Version: 0.2.0
+# License: MIT + file LICENSE
+# Authors@R: c( person("Scott", "Chamberlain", role = c("aut", "cre"), email = "myrmecocystus@gmail.com"), person("Kevin", "Ushey", role = "aut", email = "kevinushey@gmail.com"), person("Hao", "Zhu", role = "aut", email = "haozhu233@gmail.com") )
+# URL: https://github.com/ropensci/rsnps
+# BugReports: https://github.com/ropensci/rsnps/issues
+# VignetteBuilder: knitr
+# Imports: plyr, stringr, httr (>= 1.2.0), XML, jsonlite
+# Suggests: roxygen2 (>= 5.0.1), testthat, knitr, covr
+# RoxygenNote: 5.0.1
+# NeedsCompilation: no
+# Packaged: 2016-11-20 00:40:42 UTC; sacmac
+# Author: Scott Chamberlain [aut, cre], Kevin Ushey [aut], Hao Zhu [aut]
+# Maintainer: Scott Chamberlain <myrmecocystus@gmail.com>
+# Repository: CRAN
+# Date/Publication: 2016-11-20 09:22:43
+
+# See
+# http://docs.continuum.io/conda/build.html for
+# more information about meta.yaml

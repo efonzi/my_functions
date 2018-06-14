@@ -23,7 +23,6 @@ requirements:
         - r-ape =5.1
         - r-sdmtools =1.1_221
         - r-digest =0.6.15
-
     run:
         - r-base =3.3.2
         - bioconductor-affxparser =1.48.0
@@ -34,6 +33,7 @@ requirements:
         - r-ape =5.1
         - r-sdmtools =1.1_221
         - r-digest =0.6.15
+        - r-listenv =0.7.0
 
 test:
     commands:
