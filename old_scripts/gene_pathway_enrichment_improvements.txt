@@ -1,0 +1,3 @@
+### gene_pathway_enrichment ###
+- add automatic piping of stderr and stdout to file .log
+

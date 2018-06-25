@@ -1,0 +1,324 @@
+# Copyright (C) 2015  Marco Manfrini, PhD
+
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation, either version 3 of the License, or
+# (at your option) any later version.
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+
+# You should have received a copy of the GNU General Public License
+# along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#----------------------------------------------------------------------
+#----------------------------------------------------------------------
+
+convertMutect2Annovar <- function () {
+  # LIBRARIES
+  
+  library(ggplot2)
+  library(grid)
+  
+  #----------------------------------------------------------------------
+  #----------------------------------------------------------------------
+  
+  # FUNCTIONS
+  
+  #----------------------------------------------------------------------
+  #----------------------------------------------------------------------
+  
+  ### DIAGNOSTIC PLOTS
+  
+  diagPlots<-function(dset, fileName, filtered, param){
+    
+    plot_COV<-(ggplot(dset, aes(x=total_pairs))
+               +geom_density(binwidth=1, fill="black", colour="black")
+               +geom_vline(xintercept=param$median_cov, color="red")
+               +ylab("Density")
+               +xlab("Counts")
+               +ggtitle(paste("COVERAGE median=", signif(param$median_cov, digits=3))))
+    
+    plot_IMP_PAIR<-(ggplot(dset, aes(x=improper_pairs))
+                    +geom_density(binwidth=1, fill="black", colour="black")
+                    +geom_vline(xintercept=param$IMP_PAIR, color="red")
+                    +ylab("Density")
+                    +xlab("Counts")
+                    +ggtitle(paste("IMP_PAIRS mean=", signif(param$IMP_PAIR, digits=3))))
+    
+    plot_MAPQ0<-(ggplot(dset, aes(x=map_Q0_reads))
+                 +geom_density(binwidth=1, fill="black", colour="black")
+                 +geom_vline(xintercept=param$MAP_Q0, color="red")
+                 +ylab("Density")
+                 +xlab("Counts")
+                 +ggtitle(paste("MAPQ0 mean=", signif(param$MAP_Q0, digits=3))))
+    
+    plot_ALT_COUNT<-(ggplot(dset, aes(x=t_alt_count))
+                     +geom_density(binwidth=1, fill="black", colour="black")
+                     +geom_vline(xintercept=param$ALT_COUNT, color="red")
+                     +ylab("Density")
+                     +xlab("Counts")
+                     +ggtitle(paste("ALT_COUNT mean=", signif(param$ALT_COUNT, digits=3))))
+    
+    plot_T_RATIO<-(ggplot(dset, aes(x=tumor_f))
+                   +geom_density(binwidth=1, fill="black", colour="black")
+                   +geom_vline(xintercept=param$T_RATIO, color="red")
+                   +ylab("Density")
+                   +xlab("Counts")
+                   +ggtitle(paste("T_RATIO=", signif(param$T_RATIO, digits=3))))
+    
+    plot_T_POWER<-(ggplot(dset, aes(x=tumor_power))
+                   +geom_density(binwidth=1, fill="black", colour="black")
+                   +geom_vline(xintercept=param$T_POWER, color="red")
+                   +ylab("Density")
+                   +xlab("Counts")
+                   +ggtitle(paste("T_POWER=", signif(param$T_POWER, digits=3))))
+    
+    plot_T_RATIO_ALT_COUNT<-(ggplot(dset, aes(x=tumor_f, y=t_alt_count))
+                             +geom_point(fill="black")
+                             +stat_smooth(method = "lm")
+                             +ylab("ALT_COUNTS")
+                             +xlab("T_RATIO")
+                             +ggtitle("ALT_COUNTS(T_RATIO)"))
+    
+    plot_T_RATIO_T_POWER<-(ggplot(dset, aes(x=tumor_f, y=tumor_power))
+                           +geom_point(fill="black")
+                           +stat_smooth(method = "lm")
+                           +ylab("T_POWER")
+                           +xlab("T_RATIO")
+                           +ggtitle("T_POWER(T_RATIO)"))
+    
+    pdf(file=paste(fileName, "_", filtered, "_report.pdf", sep=""), width = 8.3, height = 11.7)
+    
+    grid.newpage()
+    pushViewport(viewport(layout = grid.layout(4, 2)))
+    print(plot_COV, vp=viewport(layout.pos.row=1, layout.pos.col=1))
+    print(plot_IMP_PAIR, vp=viewport(layout.pos.row=1, layout.pos.col=2))
+    print(plot_MAPQ0, vp=viewport(layout.pos.row=2, layout.pos.col=1))
+    print(plot_ALT_COUNT, vp=viewport(layout.pos.row=2, layout.pos.col=2))
+    print(plot_T_RATIO, vp=viewport(layout.pos.row=3, layout.pos.col=1))
+    print(plot_T_POWER, vp=viewport(layout.pos.row=3, layout.pos.col=2))
+    print(plot_T_RATIO_ALT_COUNT, vp=viewport(layout.pos.row=4, layout.pos.col=1))
+    print(plot_T_RATIO_T_POWER, vp=viewport(layout.pos.row=4, layout.pos.col=2))
+    
+    dev.off()
+  }
+  
+  diagCalc<-function(dset, param){
+    
+    param$t_ref_count=dset$t_ref_count
+    param$t_alt_count=dset$t_alt_count
+    param$n_ref_count=dset$n_ref_count
+    param$n_alt_count=dset$n_alt_count
+    param$sum_t_count<-param$t_ref_count+param$t_alt_count
+    param$sum_n_count<-param$n_ref_count+param$n_alt_count
+    
+    param$median_cov<-median(dset$total_pairs)
+    param$mean_imp_pair<-mean(dset$improper_pairs)
+    param$mean_map_Q0_reads<-mean(dset$map_Q0_reads)
+    param$mean_t_alt_count<-mean(dset$t_alt_count)
+    param$median_t_alt_count<-median(dset$t_alt_count)
+    
+    #QUALITY FILTER PARAMETER
+    param$COV=param$median_cov
+    param$IMP_PAIR=param$mean_imp_pair
+    param$MAP_Q0=param$mean_map_Q0_reads
+    
+    #VARIANT FILTER PARAMETER
+    param$ALT_COUNT=param$mean_t_alt_count
+    param$T_RATIO=0.03
+    param$T_POWER=0.80
+    param$MIN_T_COUNT<-5
+    param$MIN_N_COUNT<-5
+  
+    return(param)
+  }
+  
+  #----------------------------------------------------------------------
+  #----------------------------------------------------------------------
+  
+  # GLOBAL VARIABLES
+  
+  param<-list(t_ref_count=NULL, t_alt_count=NULL, n_ref_count=NULL, n_alt_count=NULL, sum_t_count=NULL, sum_n_count=NULL,
+              median_cov=0, mean_imp_pair=0, mean_map_Q0_reads=0, mean_t_alt_count=0, median_t_alt_count=0, COV=0, IMP_PAIR=0, MAP_Q0=0, ALT_COUNT=0,
+              T_RATIO=0.05, T_POWER=0.80, MIN_T_COUNT=0, MIN_N_COUNT=0)
+  
+  tmpSet=NULL; annoSet=NULL;
+  
+  #----------------------------------------------------------------------
+  #----------------------------------------------------------------------
+  
+  # Set directories and dependencies
+  args <- commandArgs(trailingOnly = TRUE)
+  arg<-args[1]
+  setwd(arg)
+  
+  annovarDIR="/home/PERSONALE/eugenio.fonzi2/annovar/"
+  
+  exGenesList<-"/home/PERSONALE/eugenio.fonzi2/reference/genes_exclusion_list.csv"
+  exGenesList<-read.delim(exGenesList, header=F, quote="", stringsAsFactors=F)
+
+  # load list of samples
+  samplesList<-read.delim(paste(getwd(), "samtoolsList", sep="/"), header=F, quote="", stringsAsFactors=F)
+  
+  # get name of MuTect output files
+  fileNames<-list.files(arg, ".out$")
+  cat("\n MuTect output files are ", fileNames, "\n")
+  
+  # loop over file names
+  for(i in 1:length(fileNames)){
+  
+    cat("\n processing file -->", fileNames[i], "\n")
+    # load Mutect output for a sample
+    dset<-read.delim(paste(getwd(), fileNames[i], sep="/"), header=T, skip=1, quote="", stringsAsFactors=F)
+  
+    # get sample name
+    sampleName<-dset[1, 'tumor_name']
+    cat("sample -->", sampleName, "\n")
+    
+    # Selecting row KEEP=TRUE & COVERED=TRUE
+    sel<-which((dset$judgement=="KEEP") & (dset$covered=="COVERED"))
+    dset<-dset[sel,] 
+    
+    # diagnostic and plots
+    param=diagCalc(dset, param)
+    diagPlots(dset, fileNames[i], "raw", param)
+    
+    ##################################### UNDERSTAND THIS!!!! #######################
+    # FILTERING
+    sel_t<-which(param$sum_t_count>param$MIN_T_COUNT)
+    sel_n<-which(param$sum_n_count>param$MIN_N_COUNT)
+    sel<-intersect(sel_t, sel_n)
+    #dset<-dset[sel,]
+    sel<-which((dset$improper_pairs<=param$IMP_PAIR) & (dset$map_Q0_reads<=param$MAP_Q0)                  #QUALITY FILTER
+               & (dset$tumor_f>param$T_RATIO))                                                            #VARIANT FILTER
+    #dset<-dset[sel, ]
+    ##########################################################################   
+    
+    
+    ### MAP TO SAMPLE NAME
+    m<-dim(dset)[1]
+
+    # to distinguish between sample names like "Sample_1258_sequence_1.fastq" and sample names like "Sample_3FK_3D_sequence_1.fastq"
+    keyNum<-unlist(strsplit(sampleName, "_"))
+    if(length(keyNum) == 4){keyNum = keyNum[2]}
+    if(length(keyNum) == 5){keyNum = keyNum[3]}
+
+    print(sampleName) 
+    
+    if(is.na(keyNum) == FALSE){ # to prevent code from halting in case no calls met "KEEP" or "COVERED" requirements
+      
+      sel<-which(grepl(keyNum, samplesList[,1]))
+      sampleLabel<-samplesList[sel,]
+      labels<-rep(sampleLabel, m)
+      
+      ### BUILD CURRENT DATASET
+      tmpSet<-cbind(dset$contig, dset$position, dset$position, dset$ref_allele, dset$alt_allele, dset$context, dset[,6:35], labels)
+      namesVector<-colnames(tmpSet)
+      namesVector[1]<-"Chr"
+      namesVector[2]<-"Start"
+      namesVector[3]<-"End"
+      namesVector[4]<-"Ref"
+      namesVector[5]<-"Alt"
+      namesVector[6]<-"Context"
+      namesVector[37]<-"Sample"
+      colnames(tmpSet)<-namesVector
+      
+      annoSet<-rbind(annoSet, tmpSet) 
+
+    }else{
+      labels<-vector()
+      ### BUILD CURRENT DATASET
+      tmpSet<-cbind(dset$contig, dset$position, dset$position, dset$ref_allele, dset$alt_allele, dset$context, dset[,6:35], labels)
+      namesVector<-colnames(tmpSet)
+      namesVector[1]<-"Chr"
+      namesVector[2]<-"Start"
+      namesVector[3]<-"End"
+      namesVector[4]<-"Ref"
+      namesVector[5]<-"Alt"
+      namesVector[6]<-"Context"
+      namesVector[37]<-"Sample"
+      colnames(tmpSet)<-namesVector
+      
+      annoSet<-rbind(annoSet, tmpSet)
+    }
+    
+  }
+  
+  # PLOT - FILTERED DATA
+
+  param=diagCalc(annoSet, param)
+
+
+  diagPlots(annoSet, "somatic_mutations", "filtered", param)
+  
+  ### WRITE OUT REPORT
+  
+  write.table(annoSet, file="annoSet.tsv", row.names=F, col.names=F, sep="\t", quote=F)
+  
+  ### CALL ANNOVAR
+  
+  CMDString<-paste("perl ", annovarDIR, "table_annovar.pl ", arg, "/annoSet.tsv ",  annovarDIR, "humandb/ -buildver hg19 -out ", arg, "/somatic_mutation ", 
+  "-remove -protocol refGene,cytoBand,genomicSuperDups,esp6500siv2_all,snp138,1000g2014oct_all,exac03nontcga,ljb26_all -operation g,r,r,f,f,f,f,f -nastring NA -csvout", sep="")
+  
+  system(CMDString)
+  
+  # CMDString<-paste("rm ", arg, "/annoSet.tsv", sep="")
+  # system(CMDString)
+  
+  ### BUILD ANNOTATED DATASET
+  
+  annotatedSetFileName<-"somatic_mutation.hg19_multianno.csv"
+  
+  tmpSet<-read.delim(paste(getwd(), annotatedSetFileName, sep="/"), header=T, sep=",", stringsAsFactors=F)
+  
+  somatic_status<-rep("Somatic", dim(tmpSet)[1])
+
+  outSet<-cbind(annoSet$Sample, tmpSet[,1:16], tmpSet[, c(24:25, 27, 35)], somatic_status, annoSet$tumor_f, annoSet$t_ref_count, annoSet$t_alt_count, annoSet$n_ref_count, 
+                annoSet$n_alt_count, annoSet$tumor_name, annoSet$normal_name)
+  
+  ### REMOVE NON-EXOMIC, SYNONIMOUS
+  
+  sel<-which((outSet$Func.refGene=="exonic") | (outSet$Func.refGene=="exonic;exonic"))
+  outSet<-outSet[sel,]
+  sel<-which((outSet$ExonicFunc.refGene=="synonymous SNV") | (outSet$ExonicFunc.refGene=="synonymous SNV;synonymous SNV") |
+               (outSet$ExonicFunc.refGene=="unknown") | (outSet$ExonicFunc.refGene==""))
+  outSet<-outSet[-sel,]
+  
+  ### REMOVE EXCLUSION LIST GENES
+  
+  pattern<-paste("^", exGenesList[,1], sep="")
+  for(i in 1:length(pattern)){
+    sel<-grep(pattern[i], outSet$Gene.refGene)
+    if(length(sel)>0) outSet<-outSet[-sel,]
+  }
+  
+  
+  namesVector<-colnames(outSet)
+  namesVector[1]<-"Sample"
+  namesVector[23]<-"tumor_f"
+  namesVector[24]<-"t_ref_count"
+  namesVector[25]<-"t_alt_count"
+  namesVector[26]<-"n_ref_count"
+  namesVector[27]<-"n_alt_count"
+  namesVector[28]<-"t_fastq"
+  namesVector[29]<-"n_fastq"
+  colnames(outSet)<-namesVector
+  
+  sel<-which(outSet$Chr=="X")
+  if(length(sel)>0) outSet[sel, 'Chr']=23
+  
+  sel<-which(outSet$Chr=="Y")
+  if(length(sel)>0) outSet[sel, 'Chr']=24   
+  
+  write.table(outSet, file="somatic_mutation_hg19_annotated.tsv", row.names=F, col.names=T, sep="\t", quote=F, dec=".")
+  
+  CMDString<-paste("rm ", arg, "/", annotatedSetFileName, sep="")
+  
+  system(CMDString)
+  
+  ### END
+}
+
+convertMutect2Annovar()

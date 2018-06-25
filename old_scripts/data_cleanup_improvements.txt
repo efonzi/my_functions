@@ -1,0 +1,19 @@
+##########################
+########### ADAPTERREMOVAL
+##########################
+
+> --discarded $outpath/Logs/discarded.out
+> --outputstats $outpath/Logs/stats.out
+> --singleton $outpath/Logs/singleton.out
+# the output of these 3 options is overwritten at every cycle (sample) --> make it write separately for each sample
+# the option <--outputstats> generates GBs of output and it may be too much to have one for each sample
+# I can't find <--outputstats> in the v2.x, it probably was substituted by <--settings>
+# the output can be zipped on the fly, so I may still use <--settings> for each sample in v2.x
+
+#manual at:
+#https://github.com/MikkelSchubert/adapterremoval/blob/master/AdapterRemoval.pod
+
+## I don't get why this tool works in bio4, given that I did not install it and just copy the executable (~/tools/AdapterRemoval)
+
+
+## make it work on fastq.gz on the fly
