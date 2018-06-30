@@ -59,6 +59,7 @@ conda install -y -n py365_euge pyyaml
 conda install -y -n py365_euge biopython
 conda install -y -n py365_euge rpy2
 conda install -y -n py365_euge xlrd
+conda install -y -n py365_euge snakemake
 source activate py365_euge
 python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
 
