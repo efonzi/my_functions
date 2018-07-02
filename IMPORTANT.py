@@ -1,3 +1,15 @@
+#####################################################
+######################## ATOM #######################
+#####################################################
+## apm is Atom Package Manager, the best way to install packages
+
+# AOSP proxy stops the installation of packages...
+# the command 'apm config' allows to configure apm to use AOSP proxy
+# 'http://192.168.65.4:8080' is the address of AOSP proxy
+apm config set https-proxy http://192.168.65.4:8080
+
+
+
 ###################################################################
 ######################## PEDAGOGIA - ped432 #######################
 ###################################################################
