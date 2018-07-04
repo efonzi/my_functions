@@ -172,7 +172,17 @@ python3.4 -m pip install --user packageName
 #------------------ OTHER ------------------------
 
 ### to syncronize folders/files between local and our server ###
-rsync -rav ~/path/to/be/copied eugenio.fonzi2@137.204.48.206:~/path/to/copy/in/server
+$ rsync -av --delete SOURCE DEST
+
+other options
+-n  dry run
+--exclude 'NAS'  will exclude the folder 'NAS' from the sync
+
+remote server is specified like:
+username@ip_address:/directory/path/
+example:
+eugenio.fonzi2@137.204.48.206:~/wes_analyses/bam/
+
 
 ### to access one's own "screen" on the server
 ssh -X silvia.vitali4@137.204.48.206
