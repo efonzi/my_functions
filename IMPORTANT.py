@@ -61,6 +61,9 @@ conda list -n myenv
 conda remove --name myenv --all
 
 
+###### TO CREATE CONDA ENVIRONMENT 'snake' ######
+conda create -y -n snake python=3.6.5 snakemake=5.1.5
+
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
 conda config --add channels bioconda
 conda config --add channels conda-forge
