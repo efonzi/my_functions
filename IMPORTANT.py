@@ -60,14 +60,18 @@ conda list -n myenv
 # remove an environment
 conda remove --name myenv --all
 
+###### add/append every channel
+# add sets highest priority, while append sets lowest priority
+conda config --add channels bioconda
+conda config --add channels conda-forge
+conda config --add channels statsmodels
+conda config --append channels dranew
+
 
 ###### TO CREATE CONDA ENVIRONMENT 'snake' ######
 conda create -y -n snake python=3.6.5 snakemake=5.1.5
 
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
-conda config --add channels bioconda
-conda config --add channels conda-forge
-conda config --add channels statsmodels
 conda create -y -n py365_euge python=3.6.5 ipykernel
 conda install -y -n py365_euge pandas numpy matplotlib seaborn statsmodels matplotlib-venn
 conda install -y -n py365_euge pyyaml
