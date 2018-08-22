@@ -267,7 +267,8 @@ handle.close
 cytoband = record2[0]['Entrezgene_location'][0]['Maps_display-str']
 
 
-####### PANDAS
+############################################
+############### PANDAS
 # returns TRUE if the element of an array/DF is 'NaN'
 pd.isnull(df.loc['x', 'y'])
 # returns TRUE if the element of an array/DF is NOT 'NaN'
@@ -289,7 +290,12 @@ obj1.union(obj2)
 # to check if two pandas DF are the same or not
 df1.equals(df2)
 
+# to slice a MultiIndex ('https://www.somebits.com/~nelson/pandas-multiindex-slice-demo.html')
+# this will slice for the 2nd and 4th LEVEL of 4-level MultiIndex
+df.loc[pd.IndexSlice[:, 'labelX', :, 'labelY'], :]
 
+
+##################################################################
 ####### configure jupyter to print multiple output after the cell
 from IPython.core.interactiveshell import InteractiveShell
 InteractiveShell.ast_node_interactivity = "all"
