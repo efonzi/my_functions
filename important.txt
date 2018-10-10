@@ -128,6 +128,10 @@ screen -r ALL
 screen -r ipython
 screen -ls
 
+
+
+
+
 #---------------------- JUPYTER --------------------
 
 ### 1. from remote, type
@@ -151,6 +155,9 @@ ssh -N -L localhost:xxxx:localhost:yyyy eugenio.fonzi2@137.204.48.206
 # detailed info at this page ---> https://coderwall.com/p/ohk6cg/remote-access-to-ipython-notebooks-via-ssh
 
 
+
+
+
 # -------------------- PYTHON ---------------------
 
 #### to install a python package only for one user of the server
@@ -158,6 +165,9 @@ cd ~/
 python3.4 -m pip install --user packageName
 
 # (adapt command 'pythonX.Y' to current version of Python)
+
+
+
 
 
 # -------------------- RSTUDIO ---------------------
@@ -169,7 +179,10 @@ python3.4 -m pip install --user packageName
 - sign in with unibo username and password
 
 
-#------------------ OTHER ------------------------
+
+
+
+#------------------ RSYNC ------------------------
 
 ### to syncronize folders/files between local and our server ###
 $ rsync -av --delete SOURCE DEST
@@ -183,13 +196,12 @@ username@ip_address:/directory/path/
 example:
 eugenio.fonzi2@137.204.48.206:~/wes_analyses/bam/
 
+# TO SPECIFY THE PASSWORD ON COMMAND LINE
+# Note the space at the start of the command; in the bash shell
+# this will stop the command (and the password) from being stored in the history.
+$  sshpass -p "password" rsync -av /SOURCE /DEST
 
-### to access one's own "screen" on the server
-ssh -X silvia.vitali4@137.204.48.206
-ssh eugenio.fonzi2@137.204.48.206
 
-### to exit the server
-exit
 
 #----------------------------------------------------------------------------------------
 
