@@ -273,6 +273,28 @@ personale\giovanni.martinelli2
 
 # the public key is stored in “~/.ssh/id_rsa.pub” and the private key in “~/.ssh/id_rsa”
 
+#=====================================
+#=============== ECDSA ===============
+#=====================================
+
+## on October 2018 a cryptocurrency miner hacked into BIO4 using my UNIBO account, so I had to change password and SSH KEYS
+
+# delete old keys
+rm .ssh/id_rsa*
+rm .ssh/known_hosts
+
+# generate new keys with ECDSA algorithm
+ssh-keygen -t ecdsa -b 521
+
+# copy public key into BIO1
+ssh-copy-id -i ~/.ssh/id_ecdsa eugenio.fonzi2@137.204.48.143
+
+# copy public key into BIO3
+ssh-copy-id -i ~/.ssh/id_ecdsa eugenio.fonzi2@137.204.48.205
+
+
+
+
 #######################################################################
 ############################## OTHERS #################################
 #######################################################################
