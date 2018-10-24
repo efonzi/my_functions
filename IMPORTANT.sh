@@ -4,16 +4,16 @@
 
 ###### INSTALL CUSTOM R PACKAGES FROM COMMAND LINE ########
 
-# Create a custom path for R packages
-$ mkdir ~/custom/path/name
-$ echo "R_LIBS=~/custom/path/name" > ~/.Renviron
+# Create a custom path for every R package (mine will be ~/pkgs_R_euge/lib)
+mkdir ~/pkgs_R_euge
+mkdir ~/pkgs_R_euge/lib
+echo "R_LIBS=~/pkgs_R_euge/lib" > ~/.Renviron
 
 # from inside R, I can check the list of paths where R will look for libraries with
 > .libPaths()
 
 # install the package in the desired path (need to download a tarball first)
-$ R CMD INSTALL -l ~/custom/path/name ~/path/to/package.tar.gz
-
+$ R CMD INSTALL -l ~/pkgs_R_euge/lib ~/path/to/package.tar.gz
 
 ## CAVEAT
 
@@ -24,6 +24,8 @@ $ R CMD INSTALL -l ~/custom/path/name ~/path/to/package.tar.gz
 # DO NOT INCLUDE A '/' AT THE END OF THE PATH!!!
 # '~/custom/path' --> OK
 # '~/custom/path/' --> NO!!
+
+
 
 
 ######## R su linux MARCO ########

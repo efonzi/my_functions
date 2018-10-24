@@ -72,17 +72,13 @@ conda config --append channels dranew
 conda create -y -n snake python=3.6.5 snakemake=5.1.5
 
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
-conda create -y -n py365_euge python=3.6.5 ipykernel
+conda create -y -n py365_euge python=3.6.5 ipykernel jupyter
 conda install -y -n py365_euge pandas numpy matplotlib seaborn statsmodels matplotlib-venn
-conda install -y -n py365_euge pyyaml
-conda install -y -n py365_euge biopython
-conda install -y -n py365_euge rpy2
-conda install -y -n py365_euge xlrd
-conda install -y -n py365_euge snakemake
-conda install -y -n py365_euge lxml
+conda install -y -n py365_euge pyyaml biopython rpy2 xlrd snakemake lxml
+
 source activate py365_euge
 python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
-
+source deactivate
 
 
 ###### TO BUILD 'r-rawcopy' PACKAGE FROM SCRATCH #######
