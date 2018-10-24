@@ -2,6 +2,16 @@
 ####################### R #####################
 ##############################################
 
+#### Create a custom path for R packages #####
+mkdir ~/custom/path/name
+echo "R_LIBS=~/custom/path/name" > ~/.Renviron
+
+# from inside R, I can check the list of paths where R will look for libraries with
+> .libPaths()
+
+
+
+
 ######## R su linux MARCO ########
 ###170523
 ###version 3.3.2 is installed in usr/local/bin/ and it's the one to which the terminal and Rstudio connect automatically
