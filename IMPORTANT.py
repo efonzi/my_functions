@@ -69,7 +69,8 @@ conda config --append channels dranew
 
 
 ###### TO CREATE CONDA ENVIRONMENT 'snake' ######
-conda create -y -n snake python=3.6.5 snakemake=5.1.5
+conda create -y -n snake python=3.6.5 snakemake=5.1.5 ## until 181029
+conda create -y -n snake python=3.6.5 snakemake=5.1.5 perl=5.26.2 perl-lwp-protocol-https ## since 181029, for snakefile_call_02.py
 
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
 conda create -y -n py365_euge python=3.6.5 ipykernel jupyter
