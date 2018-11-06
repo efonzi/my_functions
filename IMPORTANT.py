@@ -73,9 +73,7 @@ conda create -y -n snake python=3.6.5 snakemake=5.1.5 ## until 181029
 conda create -y -n snake python=3.6.5 snakemake=5.1.5 perl=5.26.2 perl-lwp-protocol-https ## since 181029, for snakefile_call_02.py
 
 ###### TO CREATE CONDA ENVIRONMENT 'py365_euge' ######
-conda create -y -n py365_euge python=3.6.5 ipykernel jupyter
-conda install -y -n py365_euge pandas numpy matplotlib seaborn statsmodels matplotlib-venn
-conda install -y -n py365_euge pyyaml biopython rpy2 xlrd snakemake lxml
+conda create -y -n py365_euge python=3.6.5 ipykernel jupyter pandas numpy matplotlib seaborn statsmodels matplotlib-venn pyyaml biopython rpy2 xlrd snakemake lxml samtools
 
 source activate py365_euge
 python -m ipykernel install --user --name py365_euge --display-name 'py365_euge'
