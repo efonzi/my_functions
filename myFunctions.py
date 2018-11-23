@@ -1,5 +1,38 @@
 
-# coding: utf-8
+def FASTAtoDictionary(FASTA):
+    
+    '''
+    Load a FASTA file and return a python dictionary with the CHROMOSOME/CONTIG names as
+    keys and the sequence (in the form of a string) as values.
+    'FASTA' must be the path to the file
+    '''
+    
+    # load reference FASTA and separate chromosomes
+    with open(FASTA) as infile:
+        fasta = infile.read().split('>')[1:]
+        
+    d = {}
+    # loop over chromosomes
+    for chrom in fasta:
+        
+        # split sequence by '\n'
+        chrom = chrom.splitlines()
+        
+        # extract chromosome name from header (ex. 'Y dna:chromosome chromosome:GRCh37:Y:2649521:59034049:1')
+        name = chrom[0].split(' ')[0]
+        
+        # join the list of DNA sequences in one big string
+        chrom = ''.join(chrom[1:])
+        
+        # assign the big string to a dict, with chrom name as key
+        d[name] = chrom
+    
+    return(d)
+    
+
+
+
+
 
 def squeezeColumn(df, to_squeeze, ref_col, sep):
     
