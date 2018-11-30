@@ -280,7 +280,10 @@ https --> 5006
 https://ngs-ptl.unibo.it:5006
 # it works from MacOSX's FINDER
 # it doesn't work from ubuntu's Nautilus (it doesn't accept "https", only "dav(s)")
-# it works from ubuntu with command "sudo mount -t davfs https://ngs-ptl.unibo.it:5006 ~/Scrivania/nas", after installing "ca-certificates" with "sudo apt install ca-certificates"
+# it works from Cyberduck with https://ngs-ptl.unibo.it:5006 (as WebDAV)
+# it works from ubuntu with command "sudo mount -t davfs https://ngs-ptl.unibo.it:5006 ~/path/to/folder", after installing "ca-certificates" with "sudo apt install ca-certificates"
+# it works from Mac OS X with command "mount_webdav -i https://ngs-ptl.unibo.it:5006 ~/path/to/folder"
+# to unmount "umount ~/path/to/folder"
 
 ### other mixed webdav info
 ngs-ptl.personale.dir.unibo.it:5005
