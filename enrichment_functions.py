@@ -105,7 +105,6 @@ def overRepresentationFromGeneSets_03(genes, geneSets, remove_no_hits=True):
     import numpy as np
     import pandas as pd
     from scipy.stats import hypergeom as hypg
-    from statsmodels.sandbox.stats.multicomp import multipletests
 
 
     # derive list of all 'symbols' from 'geneSets'
