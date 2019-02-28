@@ -244,7 +244,7 @@ def annotateSymbolTranscriptExonsCodons_02(bed, ucsc):
 	"""
 
 	import pandas as pd
-	
+
 	cols = ['chrom', 'start', 'end', 'hugo', 'strand', 'refseq_transcript', 'exon', 'intron5', 'utr5', 'extra_bases5', 'first_complete_codon', 'last_complete_codon', 'extra_bases3', 'utr3', 'intron3', 'exon_start', 'cds_start', 'cds_end', 'exon_end']
 
 	L = []
@@ -259,6 +259,8 @@ def annotateSymbolTranscriptExonsCodons_02(bed, ucsc):
 		sQ = row.start
 		eQ = row.end
 
+		any_hit = False
+
 		# subset REF table for current chromosome
 		ucscCHR = ucsc.loc[ucsc.chrom == cQ,].copy()
 
@@ -271,6 +273,8 @@ def annotateSymbolTranscriptExonsCodons_02(bed, ucsc):
 
 			# if QUERY overlaps with the transcript
 			if anyOverlap(sQ, eQ, sT, eT):
+
+				any_hit = True
 
 				# get hugo, transcript ID and strand info
 				hugo = row2.name2
@@ -618,6 +622,9 @@ def annotateSymbolTranscriptExonsCodons_02(bed, ucsc):
 							newrow = [cQ, sQ, eQ, hugo, strand, refseq, EXON, intron3, utr3, extra3, cds[1], cds[0], extra5, utr5, intron5, sE, sCpos, eCpos, eE]
 						L.append(newrow)
 
+		if not any_hit:
+			newrow = [cQ, sQ, eQ] + ['' for i in range(len(cols[3:]))]
+			L.append(newrow)
 
 	# transform to DF
 	DF = pd.DataFrame(L, columns=cols)
